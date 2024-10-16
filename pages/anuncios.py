@@ -1,4 +1,4 @@
-import locale
+
 import numpy as np
 import streamlit as st
 from utils.GoogleSheetManager import GoogleSheetManager, update_worksheet
@@ -12,7 +12,7 @@ from utils.Selectors import select_items
 conn = st.connection("gsheets", type=GSheetsConnection)
 # Inicializando o gerenciador de planilhas
 gs_manager = GoogleSheetManager()
-locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')  
+# locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')  
 # Permitindo que o usuário insira a URL
 url = st.secrets["url"]
 
