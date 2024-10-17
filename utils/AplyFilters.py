@@ -29,7 +29,6 @@ def shorten_url_with_requests(url, timeout=10):
     except requests.RequestException as e:
         return f"Erro ao encurtar a URL: {str(e)}"
     
-
 def shorten_links_in_df(df, link_column="URL"):
     # Verifica se a coluna existe antes de aplicar
     if link_column in df.columns:
@@ -80,7 +79,7 @@ def select_items(df, url):
             },
         )
 
-    update_worksheet(selected_items_df, "edit_table", 100, url)
+    # update_worksheet(selected_items_df, "edit_table", 100, url)
         
     return selected_items_df
 
