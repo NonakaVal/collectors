@@ -33,11 +33,16 @@ def shorten_links_in_df(df, link_column="URL"):
     df[link_column] = df[link_column].apply(lambda x: shorten_url_with_requests(x))
     return df
 def get_link(data):
+    # Gerando a coluna de links baseada no 'ITEM_ID' e 'TITLE'
     data['URL'] = data.apply(lambda row: f"https://www.collectorsguardian.com.br/{row['ITEM_ID'][:3]}-{row['ITEM_ID'][3:]}-{row['TITLE'].replace(' ', '-').lower()}-_JM#item_id={row['ITEM_ID']}", axis=1)
-    data = data[['ITEM_ID', 'TITLE', 'URL', 'MARKETPLACE_PRICE', 'MSHOPS_PRICE']]
+    
+    # Selecionando apenas as colunas desejadas
+    data = data[['ITEM_ID', 'TITLE', 'MARKETPLACE_PRICE', 'MSHOPS_PRICE', 'URL']]
 
-    data = shorten_links_in_df(data)
+    # Encurtando os links na coluna 'URL'
+    data = shorten_links_in_df(data, link_column='URL')
     return data
+
 def select_items(df, url):
     """Permite ao usuário selecionar itens a partir de um DataFrame."""
     df['item_display'] = df['ITEM_ID'].astype(str) + ' - ' + df['TITLE']
