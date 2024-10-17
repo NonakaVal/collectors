@@ -15,9 +15,9 @@ def select_items(df):
     # st.dataframe(selected_items_df[['ITEM_ID', 'SKU', 'TITLE']])
         st.data_editor(
             selected_items_df,
-            column_config={
-                "URL": st.column_config.LinkColumn("Links", display_text="Acessar anúncio"),
-            },
+            # column_config={
+            #     "URL": st.column_config.LinkColumn("Links", display_text="Acessar anúncio"),
+            # },
         )
    
     return selected_items_df
