@@ -6,17 +6,17 @@ keywords = {
             'playstation', 'ps1', 'ps2', 'ps3', 'ps4', 'ps5', 'psp', 'vita', 'sony'
         ],
         'controllers': [
-            'dualshock', 'sixaxis', 'move', 'vr', 'remote', 'joystick', 'bluetooth', 
-            'wireless', 'controle', 'controller'
+            'dualshock', 'remote', 'joystick', 
+             'controle', 'controller'
         ],
         'accessories': [
-            'memory', 'camera', 'charger', 'adapter', 'stand', 'case', 'cover', 'bundle', 'skin',
+            'memory', 'camera', 'charger', 'adapter', 'stand', 'cover', 'bundle', 'skin',
             'cable', 'charging', 'dock', 'strap', 'headset', 'faceplate', 'vertical'
         ]
     },
     'nintendo': {
         'items': [
-            'nintendo', 'famicom','gameboy', 'gamecube'
+            'nintendo', 'famicom','gameboy', 'gamecube', 'cube'
         ],
         'games': [
             'mario', 'zelda', 'kirby', 'pokemon', 'metroid', 'link', 'yoshi', 'smash', 'bros',

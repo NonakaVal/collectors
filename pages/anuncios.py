@@ -130,7 +130,7 @@ if url:
 st.markdown("Criar lista de Produtos:")
 select=  select_items(filtered)
 
-update_worksheet(select, "edit_table", 7, url)
+# update_worksheet(select, "edit_table", 7, url)
 
 with st.expander('Contagens totais (não otimizado)'):
     total = data['QUANTITY'].sum().astype(int)
