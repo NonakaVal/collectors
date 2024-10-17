@@ -28,20 +28,37 @@ def shorten_url_with_requests(url, timeout=10):
         return response.text
     except requests.RequestException as e:
         return f"Erro ao encurtar a URL: {str(e)}"
+    
 
 def shorten_links_in_df(df, link_column="URL"):
-    df[link_column] = df[link_column].apply(lambda x: shorten_url_with_requests(x))
-    return df
+    # Verifica se a coluna existe antes de aplicar
+    if link_column in df.columns:
+        df[link_column] = df[link_column].apply(lambda x: shorten_url_with_requests(x))
+    return df[[link_column]]  # Retorna apenas a coluna que foi encurtada
+
 def get_link(data):
+    # Verifica se o DataFrame está vazio
+    if data.empty:
+        return data  # Retorna o DataFrame vazio sem alterações
+
     # Gerando a coluna de links baseada no 'ITEM_ID' e 'TITLE'
-    data['URL'] = data.apply(lambda row: f"https://www.collectorsguardian.com.br/{row['ITEM_ID'][:3]}-{row['ITEM_ID'][3:]}-{row['TITLE'].replace(' ', '-').lower()}-_JM#item_id={row['ITEM_ID']}", axis=1)
-    
+    data['URL'] = data.apply(
+        lambda row: f"https://www.collectorsguardian.com.br/{row['ITEM_ID'][:3]}-{row['ITEM_ID'][3:]}-{row['TITLE'].replace(' ', '-').lower()}-_JM#item_id={row['ITEM_ID']}", 
+        axis=1
+    )
+
     # Selecionando apenas as colunas desejadas
-    data = data[['ITEM_ID', 'TITLE', 'MARKETPLACE_PRICE', 'MSHOPS_PRICE', 'URL']]
+    selected_columns = ['ITEM_ID', 'TITLE', 'MARKETPLACE_PRICE', 'MSHOPS_PRICE', 'URL']
+    data = data[selected_columns]
 
     # Encurtando os links na coluna 'URL'
-    data = shorten_links_in_df(data, link_column='URL')
+    shortened_data = shorten_links_in_df(data, link_column='URL')
+
+    # Aqui estamos atribuindo a coluna 'URL' do DataFrame encurtado de volta ao data
+    data['URL'] = shortened_data['URL']
+
     return data
+
 
 def select_items(df, url):
     """Permite ao usuário selecionar itens a partir de um DataFrame."""

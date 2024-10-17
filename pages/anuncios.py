@@ -18,24 +18,6 @@ gs_manager = GoogleSheetManager()
 url = st.secrets["url"]
 
 
-def shorten_url_with_requests(url, timeout=10):
-    api_url = f"http://tinyurl.com/api-create.php?url={url}"
-    try:
-        response = requests.get(api_url, timeout=timeout)
-        response.raise_for_status()
-        return response.text
-    except requests.RequestException as e:
-        return f"Erro ao encurtar a URL: {str(e)}"
-
-def shorten_links_in_df(df, link_column="URL"):
-    df[link_column] = df[link_column].apply(lambda x: shorten_url_with_requests(x))
-    return df
-def get_link(data):
-    data['URL'] = data.apply(lambda row: f"https://www.collectorsguardian.com.br/{row['ITEM_ID'][:3]}-{row['ITEM_ID'][3:]}-{row['TITLE'].replace(' ', '-').lower()}-_JM#item_id={row['ITEM_ID']}", axis=1)
-    data = data[['ITEM_ID', 'TITLE', 'URL']]
-
-    data = shorten_links_in_df(data)
-    return data
 
 if url:
     # Adicionando URLs ao gerenciador
