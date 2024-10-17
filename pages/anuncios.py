@@ -130,6 +130,7 @@ if url:
 st.markdown("Criar lista de Produtos:")
 select=  select_items(filtered)
 
+st.divider()
 # update_worksheet(select, "edit_table", 7, url)
 
 with st.expander('Contagens totais (não otimizado)'):
