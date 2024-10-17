@@ -42,7 +42,7 @@ def select_items(df, url):
         
     return selected_items_df
 
-def apply_filters(df, df2, data):
+def apply_filters(df, df2):
 
     # st.markdown("Enviar Lista com itens selecionados:")
     # select_items(data, url=url)

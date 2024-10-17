@@ -68,12 +68,12 @@ if url:
    
    
 
-    filtered = apply_filters(products, categorias,data)
+    filtered = apply_filters(data, categorias)
 
     
     # filtered = format_data(filtered)
     # Aplicando filtro de quantidade
-    filtered = data[(data['QUANTITY'] >= min_quantity) & (data['QUANTITY'] <= max_quantity)]
+    filtered = filtered[(data['QUANTITY'] >= min_quantity) & (filtered['QUANTITY'] <= max_quantity)]
     # Aplicando filtro de preço
     # filtered = filtered[(filtered['MSHOPS_PRICE'] >= min_price) & (filtered['MSHOPS_PRICE'] <= max_price)]
     st.divider()
