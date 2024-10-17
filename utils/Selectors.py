@@ -13,7 +13,7 @@ def select_items(df):
     if not selected_items_df.empty:
         st.write("Dataframe dos itens selecionados:")
     # st.dataframe(selected_items_df[['ITEM_ID', 'SKU', 'TITLE']])
-        st.dataframe(
+        st.data_editor(
             selected_items_df,
             column_config={
                 "URL": st.column_config.LinkColumn("Links", display_text="Acessar anúncio"),

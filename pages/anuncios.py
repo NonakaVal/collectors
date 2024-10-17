@@ -34,7 +34,6 @@ if url:
     # # Inserindo IDs de categorias nos produtos
     data = get_categories_ID(products, categorias)
     # # Convertendo as colunas para os tipos apropriados
-   
  
     data =  classify_items(data, keywords)
     data = classify_editions(data, edicoes_keywords)
@@ -68,7 +67,6 @@ if url:
 
     # Aplicando filtros personalizados
     
-   
    
 
     filtered = apply_filters(data, categorias)

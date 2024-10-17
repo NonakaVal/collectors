@@ -48,7 +48,7 @@ def get_link(data):
     )
 
     # Selecionando apenas as colunas desejadas
-    selected_columns = ['ITEM_ID', 'TITLE', 'MARKETPLACE_PRICE', 'MSHOPS_PRICE', 'URL']
+    selected_columns = ['ITEM_ID', 'TITLE',"DESCRIPTION", 'MARKETPLACE_PRICE', 'MSHOPS_PRICE', 'URL']
     data = data[selected_columns]
 
     # Encurtando os links na coluna 'URL'
