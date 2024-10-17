@@ -1,5 +1,6 @@
 import streamlit as st
 from utils.GoogleSheetManager import update_worksheet
+import requests
 
 url = st.secrets["url"]
 def filter_by_category(df, category):
@@ -19,7 +20,24 @@ def filter_by_edition(df, edition):
     if edition != "Todas":
         return df[df['EDITION'] == edition]
     return df
+def shorten_url_with_requests(url, timeout=10):
+    api_url = f"http://tinyurl.com/api-create.php?url={url}"
+    try:
+        response = requests.get(api_url, timeout=timeout)
+        response.raise_for_status()
+        return response.text
+    except requests.RequestException as e:
+        return f"Erro ao encurtar a URL: {str(e)}"
 
+def shorten_links_in_df(df, link_column="URL"):
+    df[link_column] = df[link_column].apply(lambda x: shorten_url_with_requests(x))
+    return df
+def get_link(data):
+    data['URL'] = data.apply(lambda row: f"https://www.collectorsguardian.com.br/{row['ITEM_ID'][:3]}-{row['ITEM_ID'][3:]}-{row['TITLE'].replace(' ', '-').lower()}-_JM#item_id={row['ITEM_ID']}", axis=1)
+    data = data[['ITEM_ID', 'TITLE', 'URL', 'MARKETPLACE_PRICE', 'MSHOPS_PRICE']]
+
+    data = shorten_links_in_df(data)
+    return data
 def select_items(df, url):
     """Permite ao usuário selecionar itens a partir de um DataFrame."""
     df['item_display'] = df['ITEM_ID'].astype(str) + ' - ' + df['TITLE']
@@ -27,6 +45,8 @@ def select_items(df, url):
     selected_display_names = st.multiselect("Pesquisa", options=list(item_options.values()), key=1)
     selected_skus = [key for key, value in item_options.items() if value in selected_display_names]
     selected_items_df = df[df['SKU'].isin(selected_skus)]
+
+    selected_items_df = selected_items_df[['ITEM_ID', 'SKU', 'TITLE']]
 
     if not selected_items_df.empty:
         st.markdown("Dataframe dos itens selecionados:")

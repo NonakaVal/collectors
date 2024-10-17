@@ -3,10 +3,11 @@ import numpy as np
 import streamlit as st
 from utils.GoogleSheetManager import GoogleSheetManager, update_worksheet
 from utils.DataProcessor import get_categories_ID, update_product_skus, format_prices
-from utils.AplyFilters import apply_filters
+from utils.AplyFilters import apply_filters, shorten_links_in_df, get_link
 import pandas as pd
 from utils.Classifications import classify_items, keywords, classify_editions, edicoes_keywords
 import re
+import requests
 from streamlit_gsheets import GSheetsConnection
 from utils.Selectors import select_items
 conn = st.connection("gsheets", type=GSheetsConnection)
@@ -15,6 +16,26 @@ gs_manager = GoogleSheetManager()
 # locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')  
 # Permitindo que o usuário insira a URL
 url = st.secrets["url"]
+
+
+def shorten_url_with_requests(url, timeout=10):
+    api_url = f"http://tinyurl.com/api-create.php?url={url}"
+    try:
+        response = requests.get(api_url, timeout=timeout)
+        response.raise_for_status()
+        return response.text
+    except requests.RequestException as e:
+        return f"Erro ao encurtar a URL: {str(e)}"
+
+def shorten_links_in_df(df, link_column="URL"):
+    df[link_column] = df[link_column].apply(lambda x: shorten_url_with_requests(x))
+    return df
+def get_link(data):
+    data['URL'] = data.apply(lambda row: f"https://www.collectorsguardian.com.br/{row['ITEM_ID'][:3]}-{row['ITEM_ID'][3:]}-{row['TITLE'].replace(' ', '-').lower()}-_JM#item_id={row['ITEM_ID']}", axis=1)
+    data = data[['ITEM_ID', 'TITLE', 'URL']]
+
+    data = shorten_links_in_df(data)
+    return data
 
 if url:
     # Adicionando URLs ao gerenciador
@@ -76,7 +97,26 @@ if url:
     filtered = filtered[(data['QUANTITY'] >= min_quantity) & (filtered['QUANTITY'] <= max_quantity)]
     # Aplicando filtro de preço
     # filtered = filtered[(filtered['MSHOPS_PRICE'] >= min_price) & (filtered['MSHOPS_PRICE'] <= max_price)]
-    st.divider()
+    
+    pt_df =filtered.copy()
+    
+
+    novos_nomes = {
+    'ITEM_ID': 'ID_DO_ITEM',
+    'SKU': 'CÓDIGO',
+    'TITLE': 'TÍTULO',
+    'DESCRIPTION': 'DESCRIÇÃO',
+    'MSHOPS_PRICE': 'PREÇO_MSHOPS',
+    'MARKETPLACE_PRICE': 'PREÇO_MARKETPLACE',
+    'CATEGORY': 'CATEGORIA',
+    'STATUS': 'STATUS',
+    'QUANTITY': 'QUANTIDADE'
+}
+
+# Renomeando as colunas
+
+    pt_df.rename(columns=novos_nomes, inplace=True)
+
     # else:
     # st.subheader("TABELA DE ITENS FILTRADOS")
 
@@ -98,17 +138,18 @@ if url:
     #         conn.update(spreadsheet=url, worksheet="products", data=df)
     #         st.success("Worksheet Updated 🤓")
             
-    
+
     # Exibindo a tabela filtrada com coluna de links
     st.dataframe(
-        filtered,
+        pt_df,
         column_config={
             "ITEM_LINK": st.column_config.LinkColumn("Links", display_text="Acessar anúncio"),
-        },
+        }
     )
 
 st.markdown("Criar lista de Produtos:")
-select= select_items(filtered)
+select=  select_items(filtered)
+
 update_worksheet(select, "edit_table", 7, url)
 
 with st.expander('Contagens totais (não otimizado)'):
@@ -152,3 +193,4 @@ with st.expander('Contagens totais (não otimizado)'):
         in_stock = data[data['QUANTITY'] >= 1]
   
     st.dataframe(in_stock)
+
