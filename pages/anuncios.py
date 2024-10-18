@@ -15,20 +15,19 @@ conn = st.connection("gsheets", type=GSheetsConnection)
 gs_manager = GoogleSheetManager()
 # locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')  
 # Permitindo que o usuário insira a URL
-url = st.secrets["url"]
 
-
+url = st.secrets["product_url"]
 
 if url:
     # Adicionando URLs ao gerenciador
     gs_manager.set_url(url)
     # Adicionando worksheets
-    gs_manager.add_worksheet(url, "anuncios")
-    gs_manager.add_worksheet(url, "categorias")
+    gs_manager.add_worksheet(url, "ANUNCIOS")
+    gs_manager.add_worksheet(url, "CATEGORIAS")
     gs_manager.add_worksheet(url, "edit_table")
     # # Lendo dados das worksheets
-    products = gs_manager.read_sheet(url, "anuncios")
-    categorias = gs_manager.read_sheet(url, "categorias")
+    products = gs_manager.read_sheet(url, "ANUNCIOS")
+    categorias = gs_manager.read_sheet(url, "CATEGORIAS")
     edit = gs_manager.read_sheet(url, "edit_table")
     data = products.copy()
     # # Inserindo IDs de categorias nos produtos

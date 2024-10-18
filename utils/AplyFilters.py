@@ -2,7 +2,7 @@ import streamlit as st
 from utils.GoogleSheetManager import update_worksheet
 import requests
 
-url = st.secrets["url"]
+url = st.secrets["product_url"]
 def filter_by_category(df, category):
     """Filtra o DataFrame pela categoria selecionada."""
     if category != "Todas":
@@ -47,7 +47,7 @@ def get_link(data):
     )
 
     # Selecionando apenas as colunas desejadas
-    selected_columns = ['ITEM_ID', 'TITLE',"DESCRIPTION", 'MSHOPS_PRICE', 'URL']
+    selected_columns = ['ITEM_ID', 'TITLE', 'MSHOPS_PRICE', 'URL']
     data = data[selected_columns]
 
     # Encurtando os links na coluna 'URL'
